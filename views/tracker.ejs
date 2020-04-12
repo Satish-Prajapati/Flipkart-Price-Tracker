@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link
+			rel="stylesheet"
+			href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+			integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+			crossorigin="anonymous"
+		/>
+		<title>Document</title>
+	</head>
+	<body>
+		<div class="container-fluid pt-5">
+			<h2 class="text-center">Products Currently Tracking</h2>
+			<div class="row">
+				<div class="col-8 mx-auto" id="product-list">
+					<!-- <div class="row">
+						<div class="col-12 py-4">
+							<a
+								href="https://www.flipkart.com/tp-link-archer-c20-ac-wireless-dual-band-750-mbps-router/p/itme8gkfgb5hyqzq"
+								>TP-Link Archer C20 AC Wireless Dual Band 750 Mbps Router (Blue,
+								Dual Band)</a
+							>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-6 col-md-3">Target Price: 1299</div>
+						<div class="col-6 col-md-3">Current Price: 1599</div>
+						<div class="col-6 col-md-3">Target Reached: True</div>
+						<div class="col-6 col-md-3">
+							<button class="btn btn-outline-danger">Remove</button>
+						</div>
+					</div> -->
+				</div>
+			</div>
+		</div>
+		<script type="text/javascript">
+			var products = <%-JSON.stringify(products)%>
+
+			const productGen = document.querySelector('#product-list')
+			let temp = ''
+			products.forEach(element => {
+				temp += `<div class="row">
+						<div class="col-12 pt-4 pb-2">
+							<a href="${element.productURL}">${element.productName}</a>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-12 col-md-3">Target Price: ${element.targetPrice}</div>
+						<div class="col-12 col-md-3">Current Price: ${element.currentPrice}</div>
+						<div class="col-12 col-md-3">Target Reached: ${element.targetReached}</div>
+						<div class="col-12 col-md-3">
+							<button class="btn btn-outline-danger">Remove</button>
+						</div>
+					</div>`
+			});
+			productGen.innerHTML = temp
+			console.log(products)
+		</script>
+	</body>
+</html>
