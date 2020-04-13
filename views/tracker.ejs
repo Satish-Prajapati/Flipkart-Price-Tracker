@@ -15,7 +15,7 @@
 		<div class="container-fluid pt-5">
 			<h2 class="text-center">Products Currently Tracking</h2>
 			<div class="row">
-				<div class="col-8 mx-auto" id="product-list">
+				<div class="col-8 mx-auto text-center" id="product-list">
 					<!-- <div class="row">
 						<div class="col-12 py-4">
 							<a
@@ -38,26 +38,42 @@
 		</div>
 		<script type="text/javascript">
 			var products = <%-JSON.stringify(products)%>
-
+			console.log(products)
 			const productGen = document.querySelector('#product-list')
 			let temp = ''
 			products.forEach(element => {
-				temp += `<div class="row">
-						<div class="col-12 pt-4 pb-2">
+				temp += `<div>
+					<div class="row pt-2">
+						<div class="col-12 pt-4 pb-2 h5">
 							<a href="${element.productURL}">${element.productName}</a>
 						</div>
 					</div>
-					<div class="row">
-						<div class="col-12 col-md-3">Target Price: ${element.targetPrice}</div>
+					<div class="row pb-2">
+						<div class="col-12 col-md-3">Target Price: <input data-id="${element._id}" class="form-control" type="number" min="1" name="targetPrice" id="" value="${element.targetPrice}" /></div>
 						<div class="col-12 col-md-3">Current Price: ${element.currentPrice}</div>
 						<div class="col-12 col-md-3">Target Reached: ${element.targetReached}</div>
 						<div class="col-12 col-md-3">
-							<button class="btn btn-outline-danger">Remove</button>
+							<button class="btn btn-outline-danger remove-btn" data-rmid="${element._id}">Remove</button>
 						</div>
+					</div>
 					</div>`
 			});
 			productGen.innerHTML = temp
 			console.log(products)
+			const removeBtn = document.querySelector('#product-list')
+			removeBtn.addEventListener('click', (e) => {
+				// console.log(e.target.parentElement)
+				if(e.target.dataset.rmid) {
+					console.log(e.target.dataset.rmid)
+					// console.log(e.target.parentElement.parentElement.parentElement)
+					e.target.parentElement.parentElement.parentElement.remove()
+				}
+
+			})
+			removeBtn.addEventListener("change", (e) => {
+
+				console.log(e.target.dataset.id)
+			})
 		</script>
 	</body>
 </html>

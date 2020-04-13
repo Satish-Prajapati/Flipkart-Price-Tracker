@@ -1,29 +1,10 @@
 const express = require("express");
 const axios = require("axios");
 const cheerio = require("cheerio");
+const Products = require("./models/products");
 const app = express();
 app.use(express.urlencoded({ extended: false }));
-// const products = [];
-const products = [
-	{
-		productName:
-			"TP-Link Archer C20 AC Wireless Dual Band 750 Mbps Router  (Blue, Dual Band)",
-		productURL:
-			"https://www.flipkart.com/tp-link-archer-c20-ac-wireless-dual-band-750-mbps-router/p/itme8gkfgb5hyqzq",
-		targetPrice: 1299,
-		currentPrice: 1599,
-		targetReached: false,
-	},
-	{
-		productName:
-			"TP-Link Archer C50 AC1200 Wireless Dual Band 1200 Mbps Router  (White, Dual Band)",
-		productURL:
-			"https://www.flipkart.com/tp-link-archer-c50-ac1200-wireless-dual-band-1200-mbps-router/p/itmehsxsuxax7tec",
-		targetPrice: 1399,
-		currentPrice: 1899,
-		targetReached: false,
-	},
-];
+
 app.set("view engine", "ejs");
 
 app.get("/", (req, res) => {
@@ -34,19 +15,28 @@ app.post("/addproduct", async (req, res) => {
 	const { productURL, targetPrice } = req.body;
 	const { productName, currentPrice } = await fetchDetails(productURL);
 	const targetReached = currentPrice <= targetPrice;
-	// products.push({
-	// 	productName,
-	// 	productURL,
-	// 	targetPrice,
-	// 	currentPrice,
-	// 	targetReached,
-	// });
-	res.redirect("/tracker");
-	// console.log(products);
+	const Product = new Products({
+		productName,
+		productURL,
+		targetPrice,
+		currentPrice,
+		targetReached,
+	});
+	try {
+		await Product.save();
+		res.redirect("/tracker");
+	} catch (error) {
+		res.status(500).send();
+	}
 });
 
-app.get("/tracker", (req, res) => {
-	res.status(200).render("tracker", { products });
+app.get("/tracker", async (req, res) => {
+	try {
+		const products = await Products.find({});
+		res.status(200).render("tracker", { products });
+	} catch (error) {
+		res.status(500).send();
+	}
 });
 
 app.listen(3000, () => {
