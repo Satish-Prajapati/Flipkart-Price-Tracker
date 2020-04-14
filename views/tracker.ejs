@@ -38,7 +38,7 @@
 		</div>
 		<script type="text/javascript">
 			var products = <%-JSON.stringify(products)%>
-			console.log(products)
+			// console.log(products)
 			const productGen = document.querySelector('#product-list')
 			let temp = ''
 			products.forEach(element => {
@@ -59,13 +59,25 @@
 					</div>`
 			});
 			productGen.innerHTML = temp
-			console.log(products)
+			// console.log(products)
 			const removeBtn = document.querySelector('#product-list')
 			removeBtn.addEventListener('click', (e) => {
 				// console.log(e.target.parentElement)
 				if(e.target.dataset.rmid) {
 					console.log(e.target.dataset.rmid)
-					// console.log(e.target.parentElement.parentElement.parentElement)
+					// fetch(`/delete/${e.target.dataset.rmid}`)
+					fetch(
+											`/delete/${e.target.dataset.rmid}`,
+											{
+												method: "DELETE",
+												headers: {
+													Accept: "application/json",
+													"Content-Type": "application/json",
+												},
+												// body: JSON.stringify(data),
+											}
+										)
+
 					e.target.parentElement.parentElement.parentElement.remove()
 				}
 
@@ -73,6 +85,26 @@
 			removeBtn.addEventListener("change", (e) => {
 
 				console.log(e.target.dataset.id)
+				console.log(e.target.value)
+				const data = { targetPrice: e.target.value };
+									//Sending request to backed server with updated data
+									const put = async () => {
+										const rawResponse = await fetch(
+											`/update/${e.target.dataset.id}`,
+											{
+												method: "PATCH",
+												headers: {
+													Accept: "application/json",
+													"Content-Type": "application/json",
+												},
+												body: JSON.stringify(data),
+											}
+										);
+										// const content = await rawResponse.json();
+
+										// console.log(content);
+									};
+									put();
 			})
 		</script>
 	</body>
